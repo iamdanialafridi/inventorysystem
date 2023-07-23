@@ -14,22 +14,22 @@ required :true,
 trim : true
     },
     price : {
-        type :Number,
+        type :String,
         required: true,
     min: 1,
-    validate : {
-        validator: validator.isNumeric,
-        message: "price should be numeric"
-    }
+    // validate : {
+    //     validator: validator.isNumeric,
+    //     message: "price should be numeric"
+    // }
     },
     quantity : {
-        type :Number,
+        type :String,
         required : true,
         min :1,
-        validate : {
-            validator: validator.isNumeric,
-            message: "quantity should be numeric"
-        }
+        // validate : {
+        //     validator: validator.isNumeric,
+        //     message: "quantity should be numeric"
+        // }
     }
 },
 {
