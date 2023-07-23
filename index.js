@@ -6,7 +6,7 @@ const app = express();
 db();
 app.use(routes);
 app.get("/",(req,res)=>{
-    res.send("Hello world");
+    res.send("Hello world its me");
 })
 
 app.listen(4000,()=>{
