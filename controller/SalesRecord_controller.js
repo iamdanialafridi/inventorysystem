@@ -34,12 +34,14 @@ const handleError =(err)=>{
 exports.createSaleRecord = async(req,res)=>{
     try {
         const itemId = req.body.item;
-        const qtySold = req.body.quantity;
+        const qtySold =parseInt( req.body.quantity);
+       
         if (validator.isMongoId(itemId)) {
          const item = await inventoryitem.findById(itemId);
          if(!item){
             return res.status(404).send({error : "Item not found in Inventory"});
          }  
+
 
          // check if item is in stock or out of stock etc
          if (item.quantity<qtySold) {
@@ -88,9 +90,9 @@ exports.createSaleRecord = async(req,res)=>{
 exports.getAllRecordSale = async(req,res)=>{
     try {
         const record = await saleModel.find();
-        if (record.length === 0) {
+        if (!record || record.length === 0) {
             res.status(404).send({
-                "message" : "No Sale Record found"
+                "message" : "No sales records found"
             })
         } else {
             res.status(201).send(record);
@@ -98,5 +100,67 @@ exports.getAllRecordSale = async(req,res)=>{
         
     } catch (error) {
         res.status(500).send({"message": "Internal Server Error"})
+    }
+}
+
+exports.getSaleRecordById = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        if (validator.isMongoId(id)) {
+            const singelRecord = await saleModel.findById(id);
+            if (!singelRecord || singelRecord.length === 0) {
+                res.status(404).send({
+                    "message" : "No sales records found"
+                })
+            }else {
+                res.status(201).send(singelRecord);
+            } 
+            
+        } else {
+            res.status(404).send({"message":"Invalid ID"})
+        }
+    } catch (error) {
+        res.status(500).send({"message": "Internal Server Error"})
+    }
+}
+
+exports.deleteSaleRecord = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        if (validator.isMongoId(id)) {
+            // get sold quantity and inventory item id from sale Record database
+           const getSaleQty = await saleModel.findById(id);
+           if (!getSaleQty) {
+            return res.status(404).send({ error: 'No Sale Record found.' });
+
+           }
+           const qty = parseInt(getSaleQty.quantitySold);
+           const itemId = getSaleQty.item;
+           const item = await inventoryitem.findById(itemId);
+
+           const itemQty = parseInt(item.quantity);
+         const totalqty = itemQty+qty
+           const updateItem = {
+            quantity : totalqty
+           };
+           // this will update inventory quantity if we delete salerecord
+          await inventoryitem.findByIdAndUpdate(itemId,updateItem);
+         
+           const deleteRec = await saleModel.findByIdAndDelete(id);
+
+           if (!deleteRec) {
+            return res.status(404).send({ error: 'Sale Record not deleted.' });
+
+           } 
+
+           res.status(201).send({"message" : "Sale Record deleted"})
+
+        }else {
+            res.status(404).send({"message":"Invalid ID"})
+        }
+
+
+    } catch (error) {
+        res.status(500).send({"message": "Internal Server Error","err":error.message})
     }
 }
