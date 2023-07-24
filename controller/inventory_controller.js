@@ -1,6 +1,42 @@
 const inventoryitem = require("../model/inventory_model");
 const validator = require('validator');
 
+
+const handleError =(err)=>{
+    let errors = {name:'',category:'',price:'',quantity:''}
+    // null email 
+    if(err.message === 'item name is required'){
+        errors.name = 'item name is required';
+
+    }
+     if(err.message === 'item category is required' ){
+        errors.category = 'item category is required';
+
+    }
+    // incorrect email for login
+    if(err.message === 'item price is required' ){
+        errors.price = 'item price is required';
+
+    }
+
+
+    if(err.message === 'item quantity is required'){
+        errors.quantity = 'item quantity is required';
+
+    }
+    // if(err.code === 11000){
+    //     errors.email = 'Failed! Email is already in use!';
+    //     return errors;
+    // }
+    if (err.message.includes('inventoryItem validation failed')) {
+       Object.values(err.errors).forEach(({properties}) => {
+       errors[properties.path] = properties.message;
+       });
+     }
+
+    return errors;
+}
+
 exports.getAllInventoryItem = async (req,res,next)=>{
 try {
     const item = await inventoryitem.find();
@@ -73,11 +109,75 @@ exports.addInventoryItem = async(req,res,next)=>{
         })
       }
         
+    } catch (err) {
+        const error = handleError(err);
+        res.status(400).json({error});
+        
+
+       
+    }
+}
+exports.deleteInventoryItem = async(req,res)=>{
+
+    try {
+        const id = req.params.id;
+        if (validator.isMongoId(id)) {
+            const deleteItem = await inventoryitem.findByIdAndDelete(id);
+            if (deleteItem) {
+                res.status(200).send("Item Deleted")
+            } else {
+                res.status(500).send({
+                    "message" : "Item not found"
+                }) 
+            }
+
+        } else {
+            res.status(500).send({
+                "message" : "Invalid Item Id"
+            }) 
+        }
+        
     } catch (error) {
         res.status(500).send({
-            "message" : "Internal Server Error",
-            "error" :error.message
+            "message" : "Internal Server Error"
         })
-        console.log(error.message);
+    }
+}
+exports.updateInventoryItem = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        if (validator.isMongoId(id)) {
+           const item = {
+            name :  req.body.name ? req.body.name.trim() : '' ,
+            category :req.body.category ? req.body.category.trim() : '' ,
+            price : req.body.price,
+            quantity :req.body.quantity
+           } 
+
+           const updateItem = await inventoryitem.findByIdAndUpdate(id,item,{
+            new : true,
+            runValidators : true
+           });
+           if (updateItem) {
+            res.status(200).send({
+                "message" : "Item updated",
+                "item" : updateItem
+            })
+            
+           } else {
+            res.status(404).send({
+                "message" : "Item not updated",
+                
+            })
+           }
+
+        } else {
+            res.status(400).send({"message": "invalid item id"})
+        }
+        
+    } catch (err) {
+
+       const error = handleError(err);
+        res.status(400).json({error});
     }
 }

@@ -5,17 +5,17 @@ const validator = require('validator');
 const inventoryItemSchema = new mongoose.Schema({
     name : {
         type : String,
-        required :true,
+        required :[true,"item name is required"],
         trim :true
     },
     category :{
         type : String,
-required :true,
+required :[true,"item category is required"],
 trim : true
     },
     price : {
         type :String,
-        required: true,
+        required: [true,"item price is required"],
     min: 1,
     // validate : {
     //     validator: validator.isNumeric,
@@ -24,7 +24,7 @@ trim : true
     },
     quantity : {
         type :String,
-        required : true,
+        required : [true,"item quantity is required"],
         min :1,
         // validate : {
         //     validator: validator.isNumeric,
