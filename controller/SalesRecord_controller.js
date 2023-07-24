@@ -84,3 +84,19 @@ exports.createSaleRecord = async(req,res)=>{
         
     }
 }
+
+exports.getAllRecordSale = async(req,res)=>{
+    try {
+        const record = await saleModel.find();
+        if (record.length === 0) {
+            res.status(404).send({
+                "message" : "No Sale Record found"
+            })
+        } else {
+            res.status(201).send(record);
+        }
+        
+    } catch (error) {
+        res.status(500).send({"message": "Internal Server Error"})
+    }
+}
