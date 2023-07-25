@@ -16,7 +16,7 @@ const handleError =(err)=>{
 
 
    
-    if(err.code == 11000){
+    if(err.code === 11000){
         errors.contact = 'contact number already associated with another user';
        
     }
@@ -41,7 +41,7 @@ exports.createSupplier = async (req,res)=>{
         name :name,
         contact : contact
       });
-      const createSupplier = supplier.save();
+      const createSupplier = await supplier.save();
       if (createSupplier) {
         res.status(201).send({
             "message" : "Supplier detail created",

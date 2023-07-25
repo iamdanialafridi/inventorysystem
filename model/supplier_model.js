@@ -11,7 +11,7 @@ const supplierSchema = new mongoose.Schema({
         type:String,
         required : [true,"Supplier contact is required"],
         trim:true,
-        
+        unique : true,
         validate: {
             validator: (value) => validator.isMobilePhone(value, 'any', { strictMode: false }),
             message: 'Invalid contact number',
