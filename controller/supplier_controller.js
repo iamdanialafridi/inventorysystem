@@ -112,7 +112,7 @@ const updateSupplier = await supplierModel.findByIdAndUpdate(id,supplier,{new: t
 if (!updateSupplier) {
   return res.status(404).send({message : "Supplier detail not updated"})
 }
- res.status(202).send({message : "Supplier information updated"});
+ res.status(202).send({message : "Supplier information updated" ,'supplier':updateSupplier});
 
 
   } else {
