@@ -53,7 +53,6 @@ exports.createCustomerDetail = async(req,res)=>{
         
     } catch (error) {
         const err = handleError(error);
-        console.log(err)
         res.status(500).json({err});
     }
 }
