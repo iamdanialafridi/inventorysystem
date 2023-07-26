@@ -56,3 +56,22 @@ exports.createCustomerDetail = async(req,res)=>{
         res.status(500).json({err});
     }
 }
+
+exports.getAllCustomerInformation = async(req,res)=>{
+    try {
+        const customer = await customerModel.find();
+        if (customer.length ===0) {
+            res.status(404).send({
+                "message" : "no customer found"
+            })
+            
+        } else {
+            res.status(200).send(customer);
+        }
+        
+    } catch (error) {
+        res.status(500).send({
+            "message" : "Internal Server Error"
+        })
+    }
+}
