@@ -99,3 +99,29 @@ exports.deleteSupplier= async(req,res)=>{
 
   }
 }
+exports.updateSupplierInfo = async (req,res)=>{
+try {
+  const id = req.params.id;
+  if (validator.isMongoId(id)) {
+  const  {name,contact} =req.body;
+const supplier = {
+  name,
+  contact
+}
+const updateSupplier = await supplierModel.findByIdAndUpdate(id,supplier,{new: true, runValidators: true});
+if (!updateSupplier) {
+  return res.status(404).send({message : "Supplier detail not updated"})
+}
+ res.status(202).send({message : "Supplier information updated"});
+
+
+  } else {
+    res.status(400).send("Invalid Supplier id")
+  }
+  
+} catch (error) {
+  
+}
+
+
+}
