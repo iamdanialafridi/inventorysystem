@@ -62,3 +62,40 @@ exports.createSupplier = async (req,res)=>{
         
     }
 }
+
+exports.getAllSupplier = async(req,res)=>{
+  try {
+
+    const supplier = await supplierModel.find();
+    if (!supplier || supplier.length===0) {
+      return res.status(404).send({message:"No Supplier information found"})
+    }
+    res.status(200).send(supplier)
+
+
+  } catch (error) {
+    res.status(500).send({message:"Internal server error"})
+  }
+}
+
+exports.deleteSupplier= async(req,res)=>{
+  try {
+    const id = req.params.id;
+    if (validator.isMongoId(id)) {
+      const deleteSup = await supplierModel.findByIdAndDelete(id);
+      if (!deleteSup) {
+        return res.status(404).send({message : "No Supplier found"})
+      }
+      res.status(200).send({message:"Supplier Deleted"})
+
+
+    } else {
+      res.status(400).send({message:"Invalid ID"})
+
+    }
+
+  } catch (error) {
+    res.status(500).send({message:"Internal server error"})
+
+  }
+}

@@ -1,7 +1,7 @@
 const express = require('express');
 const { getAllInventoryItem,getSingleInventoryItem,addInventoryItem ,deleteInventoryItem,updateInventoryItem} = require('../controller/inventory_controller');
 const { createSaleRecord,getAllRecordSale,getSaleRecordById ,deleteSaleRecord} = require('../controller/SalesRecord_controller');
-const { createSupplier } = require('../controller/supplier_controller');
+const { createSupplier,getAllSupplier,deleteSupplier } = require('../controller/supplier_controller');
 const router = express.Router();
 // inventory routes CRUD ROUTES
 module.exports = router.get('/inventory',getAllInventoryItem);
@@ -16,4 +16,7 @@ module.exports = router.get('/sale/record/item/:id',getSaleRecordById)
 module.exports = router.delete('/sale/record/:id',deleteSaleRecord)
 // supplier routes
 module.exports = router.post('/supplier/post',createSupplier);
+module.exports = router.get('/supplier',getAllSupplier)
+module.exports = router.delete('/supplier/:id',deleteSupplier)
+
 
