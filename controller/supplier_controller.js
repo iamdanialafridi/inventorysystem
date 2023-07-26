@@ -125,3 +125,30 @@ if (!updateSupplier) {
 
 
 }
+
+exports.getSupplierbyID = async(req,res)=>{
+  try {
+    const id = req.params.id;
+    if (validator.isMongoId(id) && !validator.isEmpty(id)) {
+       
+        const supplier = await supplierModel.findById(id);
+       if (supplier !== null) {
+        res.status(200).send(supplier);
+       } else {
+        res.status(500).send({
+            "message" : "no data found"
+        })
+       }
+    } else {
+        res.status(500).send({
+            "message" : "Invalid ID"
+        })
+    }
+   
+    
+} catch (error) {
+    res.status(500).send({
+        "message" : "Internal Server Error"
+    })
+}
+}
