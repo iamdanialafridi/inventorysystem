@@ -2,7 +2,7 @@ const express = require('express');
 const { getAllInventoryItem,getSingleInventoryItem,addInventoryItem ,deleteInventoryItem,updateInventoryItem} = require('../controller/inventory_controller');
 const { createSaleRecord,getAllRecordSale,getSaleRecordById ,deleteSaleRecord} = require('../controller/SalesRecord_controller');
 const { createSupplier,getAllSupplier,deleteSupplier,updateSupplierInfo,getSupplierbyID } = require('../controller/supplier_controller');
-const { createCustomerDetail, getAllCustomerInformation } = require('../controller/customer_controller');
+const { createCustomerDetail, getAllCustomerInformation,deleteCustomer } = require('../controller/customer_controller');
 const router = express.Router();
 // inventory routes CRUD ROUTES
 module.exports = router.get('/inventory',getAllInventoryItem);
@@ -25,5 +25,5 @@ module.exports = router.patch('/supplier/:id',updateSupplierInfo)
 // customer routes
 module.exports = router.post('/customer/post',createCustomerDetail)
 module.exports = router.get('/customer/',getAllCustomerInformation)
-
+module.exports = router.delete('/customer/:id',deleteCustomer);
 
