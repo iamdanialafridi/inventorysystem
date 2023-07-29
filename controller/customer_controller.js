@@ -79,10 +79,11 @@ exports.deleteCustomer = async(req,res)=>{
     try {
         const id = req.params.id;
         if (validator.isMongoId(id)) {
-            const delCustomer = customerModel.findByIdAndDelete(id);
+            const delCustomer = await customerModel.findByIdAndDelete(id);
             if (!delCustomer) {
                 return res.status(404).send({message : "customer information not deleted"})
             }
+
             res.status(200).send({message : "Customer information deleted"})
         } else {
             res.status(402).json({
@@ -92,7 +93,8 @@ exports.deleteCustomer = async(req,res)=>{
         
     } catch (error) {
         res.status(500).json({
-            message : "internal server error"
+            message : "internal server error",
+            err :error.message
         })
     }
 }
